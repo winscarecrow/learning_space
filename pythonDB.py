@@ -19,13 +19,12 @@ def syscls():
 
 def addData(): # Name, Surname, Age
 	columns = ["First Name", "Last Name", "Age"]
-	user_profiles = [input(f"Enter {columns[i]}: ") for i in range(3)]
+	user_profile = tuple(input(f"Enter {columns[i]}: ") for i in range(3))
 
 	obj_mycursor = mydb.cursor()
 	insert_script = "INSERT INTO UserProfile(FirstName, LastName, Age) VALUES(%s, %s, %s)"
-	insert_value = (data for data in user_profiles)
-	obj_mycursor.execute(insert_script, insert_value)
-	obj_mycursor.commit()
+	obj_mycursor.execute(insert_script, user_profile)
+	mydb.commit()
 
 	print(obj_mycursor.rowcount, "record inserted.")
 
