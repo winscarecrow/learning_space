@@ -13,6 +13,10 @@ mydb = sqlcnt.connect(
 
 
 ### function ###
+def syscls():
+	system("cls")
+
+
 def addData(): # Name, Surname, Age
 	columns = ["First Name", "Last Name", "Age"]
 	user_profiles = [input(f"Enter {columns[i]}: ") for i in range(3)]
@@ -36,7 +40,7 @@ def showData():
 
 
 ### main program ###
-system('cls')
+syscls()
 print("----- Profiles Report Program -----")
 
 onoff = 1
