@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter import ttk, messagebox
-# import mysql.connector as sqlcnt
+import mysql.connector as sqlcnt
 
 ################################### GUI
 root = Tk()
@@ -8,12 +8,12 @@ root.title('User Profile Report')
 root.geometry('800x500')
 
 ################################### mysql Config
-# mydb =  sqlcnt.connect(
-# 	host = "localhost",
-# 	user = "root",
-# 	password = "",
-# 	database = "pythoncompany_data"
-# )
+mydb =  sqlcnt.connect(
+	host = "localhost",
+	user = "root",
+	password = "",
+	database = "pythoncompany_data"
+)
 
 ################################### Tk Config
 text_font = ('Consolas',18)
@@ -44,6 +44,7 @@ def InsertValue():
 			vs.set('')
 
 		messagebox.showinfo('Result Box', f'{obj_mycursor.rowcount} record inserted.')
+		
 	except:
 		messagebox.showwarning('Warning !', 'Something Wrong !\nPlease Check Your Input')
 
