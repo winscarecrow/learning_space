@@ -1,6 +1,6 @@
 import csv
-from datetime import datetime as dt
 from os import system
+from datetime import datetime as dt
 import mysql.connector as sqlcnt
 
 ####################################
@@ -18,12 +18,13 @@ obj_mycursor = mydb.cursor()
 
 def EmpMan():
 	while True:
-		print("""---- Employee Management ----
-		[1] Show Employee Profile
-		[2] Create Employee Profile
-		[3] Edit Employee Profile
-		[4] Delete Employee Profile
-		[B] Back to Main Menu
+		print("""
+---- Employee Management ----
+	[1] Show Employee Profile
+	[2] Create Employee Profile
+	[3] Edit Employee Profile
+	[4] Delete Employee Profile
+	[B] Back to Main Menu
 """)
 
 		menu = input("Select Menu: ")
@@ -65,7 +66,7 @@ def EmpMan():
 				case "4":
 					try:
 						print("---- Delete Employee ----")
-						delete_profile = tuple(input(f"Enter Employee ID: ") for i in range(1))
+						delete_profile = tuple(input(f"Enter Employee ID: "))
 						delete_script = "DELETE FROM EmployeeProfile WHERE EmployeeId = %s"
 						obj_mycursor.execute(delete_script, delete_profile)
 						mydb.commit()
@@ -79,6 +80,89 @@ def EmpMan():
 
 		else:
 			print("\nInvalid Input!\n")
+
+
+def BMICal():
+	while True:
+		print("""
+---- BMI Report ----
+	[1] Show All Employee BMI
+	[2] Select Employee
+	[B] Back to Main Menu
+""")
+
+		menu = input("Select Menu: ")
+		if menu in ["1", "2"]:
+ 
+			match menu:
+				case "1":
+					obj_mycursor.execute("SELECT Employee ID, First Name, Last Name, Weight, Height FROM EmployeeProfile ORDER BY ProfileId")
+					dt_data = obj_mycursor.fetchall()
+					values = [list(i) for i in dt_data]
+					for i in range(len(values)):
+						values[i].append(round(float(values[i][3]) / (float(values[i][4])**2), 1))
+						if values[i][5] < 18.5:
+							values[i].append("Underweight")
+						elif (values[i][5] >= 18.5) and (values[i][5] <= 24.9):
+							values[i].append("Normal")
+						elif (values[i][5] >= 25.0) and (values[i][5] <= 29.9):
+							values[i].append("Overweight")
+						else:
+							values[i].append("Obesity")
+					for row in values:
+						print(f"EmpID:{row[0]}, Name:{row[1]}, Surname:{row[2]}, Weight:{row[3]}kg., Height:{row[4]}cm., BMI:{row[5]}, Result:{row[6]}")
+
+				case "2":
+					empid = tuple(input("Enter Employee: "))
+					select_script = "SELECT * FROM EmployeeProfile WHERE EmployeeId = %s"
+					obj_mycursor.execute(select_script, empid)
+					dt_data = obj_mycursor.fetchall()
+					values = []
+					for i in dt_data:
+						for j in i:
+							values.append(j)
+					values.append(round(float(values[3]) / (float(values[4])**2), 1))
+					if values[5] < 18.5:
+							values.append("Underweight")
+						elif (values[5] >= 18.5) and (values[5] <= 24.9):
+							values.append("Normal")
+						elif (values[5] >= 25.0) and (values[5] <= 29.9):
+							values.append("Overweight")
+						else:
+							values.append("Obesity")
+					print(f"EmpID:{values[0]}, Name:{values[1]}, Surname:{values[2]}, Weight:{values[3]}kg., Height:{values[4]}cm., BMI:{values[5]}, Result:{values[6]}")
+
+
+		elif menu.upper() == "B":
+			print("\nBack to Main Menu\n")
+			break
+
+		else:
+			print("\nInvalid Input!\n")
+
+
+def ExportCSV():
+	obj_mycursor.execute("SELECT Employee ID, First Name, Last Name, Weight, Height, CreateDate FROM EmployeeProfile ORDER BY ProfileId")
+	dt_data = obj_mycursor.fetchall()
+	values = [list(i) for i in dt_data]
+	for i in range(len(values)):
+		values[i].append(round(float(values[i][3]) / (float(values[i][4])**2), 1))
+		if values[i][5] < 18.5:
+			values[i].append("Underweight")
+		elif (values[i][5] >= 18.5) and (values[i][5] <= 24.9):
+			values[i].append("Normal")
+		elif (values[i][5] >= 25.0) and (values[i][5] <= 29.9):
+			values[i].append("Overweight")
+		else:
+			values[i].append("Obesity")
+
+	ymd = dt.now().strftime("%y%m%d")
+	with open(f"Employee_Healthy_{ymd}", "w", newline="", encoding="utf-8") as csvfile:
+		writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+		for i in values:
+			writer.writerow(i)
+
+	print("\nExport file Success\n")
 
 ####################################
 
@@ -99,11 +183,13 @@ while True:
 			case "1":
 				EmpMan()
 			case "2":
-				pass
+				BMICal()
 			case "3":
-				pass
+				ExportCSV()
+
 	elif mainMenu.upper() == "Q":
 		print("\nProgram Closed")
 		break
+
 	else:
 		print("\nInvalid Input!\n")
