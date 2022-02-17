@@ -96,7 +96,7 @@ def BMICal():
  
 			match menu:
 				case "1":
-					obj_mycursor.execute("SELECT Employee ID, First Name, Last Name, Weight, Height FROM EmployeeProfile ORDER BY ProfileId")
+					obj_mycursor.execute("SELECT EmployeeId, FirstName, LastName, Weight, Height FROM EmployeeProfile ORDER BY ProfileId")
 					dt_data = obj_mycursor.fetchall()
 					values = [list(i) for i in dt_data]
 					for i in range(len(values)):
@@ -142,7 +142,7 @@ def BMICal():
 
 
 def ExportCSV():
-	obj_mycursor.execute("SELECT Employee ID, First Name, Last Name, Weight, Height, CreateDate FROM EmployeeProfile ORDER BY ProfileId")
+	obj_mycursor.execute("SELECT EmployeeId, FirstName, LastName, Weight, Height, CreateDate FROM EmployeeProfile ORDER BY ProfileId")
 	dt_data = obj_mycursor.fetchall()
 	values = [list(i) for i in dt_data]
 	for i in range(len(values)):
