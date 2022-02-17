@@ -1,34 +1,18 @@
-"""เขียนโปรแกรม สมุดสุขภาพขององค์กร โดยมี ฟีเจอร์ดังนี้
-
-1) บันทึกข้อมูล
-+ รหัสพนักงาน
-+ ชื่อ
-+ นามสกุล
-+ นน.
-+ ส่วนสูง
-+ createdate
-
-2) แสดงเกณฑ์สุขภาพ
-โดยใช้เกณฑ์ของ BMI
-
-โปรแกรมนี้สามารถเก็บข้อมูลที่บันทึกไว้แล้วได้ตลอด
-------------------------------"""
-
 import csv
 from datetime import datetime as dt
 from os import system
-# import mysql.connector as sqlcnt
+import mysql.connector as sqlcnt
 
 ####################################
 
-# mydb = sqlcnt.connect(
-# 	host = "localhost",
-# 	user = "root",
-# 	password = "",
-# 	database = "pythoncompany_data"
-# )
+mydb = sqlcnt.connect(
+	host = "localhost",
+	user = "root",
+	password = "",
+	database = "pythoncompany_data"
+)
 
-# obj_mycursor = mydb.cursor()
+obj_mycursor = mydb.cursor()
 
 ####################################
 
