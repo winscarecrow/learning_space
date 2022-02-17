@@ -35,7 +35,10 @@ def EmpMan():
 					obj_mycursor.execute("SELECT * FROM EmployeeProfile")
 					dt_data = obj_mycursor.fetchall()
 					for row_data in dt_data:
-						print(row_data)
+						temp = [row_data[i] for i in range(6)]
+						dt_stamp = row_data[6].strftime("%x %X")
+						temp.append(dt_stamp)
+						print(temp)
 
 				case "2":
 					try:
@@ -50,13 +53,14 @@ def EmpMan():
 
 				case "3":
 					try:
-						columns = ["Employee ID", "First Name", "Last Name", "Weight", "Height"]
+						columns = {1:"Employee ID", 2:"First Name", 3:"Last Name", 4:"Weight", 5:"Height"}
 						print("---- Select Column to Edit ----")
-						for e,i in enumerate(columns):
-							print(f"[{e}] {i}")
-						edit_condition = ["Edit Column", "New Value", "Employee ID"]
-						edit_profile = tuple(input(f"Enter {edit_condition[i]}: ") for i in range(3))
-						edit_script = "UPDATE EmployeeProfile SET %s = %s WHERE EmployeeId = %s"
+						for i in columns.items():
+							print(i)
+						clm = int(input("Edit Column: "))
+						edit_condition = ["New Value", "Employee ID"]
+						edit_profile = tuple(input(f"Enter {edit_condition[i]}: ") for i in range(2))
+						edit_script = f"UPDATE EmployeeProfile SET {columns[clm]} = %s WHERE EmployeeId = %s"
 						obj_mycursor.execute(edit_script, edit_profile)
 						mydb.commit()
 						print(obj_mycursor.rowcount, "record edited.")
@@ -66,9 +70,9 @@ def EmpMan():
 				case "4":
 					try:
 						print("---- Delete Employee ----")
-						delete_profile = tuple(input(f"Enter Employee ID: "))
+						delete_profile = input(f"Enter Employee ID: ")
 						delete_script = "DELETE FROM EmployeeProfile WHERE EmployeeId = %s"
-						obj_mycursor.execute(delete_script, delete_profile)
+						obj_mycursor.execute(delete_script, (delete_profile,))
 						mydb.commit()
 						print(obj_mycursor.rowcount, "record deleted.")
 					except:
@@ -100,7 +104,7 @@ def BMICal():
 					dt_data = obj_mycursor.fetchall()
 					values = [list(i) for i in dt_data]
 					for i in range(len(values)):
-						values[i].append(round(float(values[i][3]) / (float(values[i][4])**2), 1))
+						values[i].append(round(float(values[i][3]) / ((float(values[i][4])*0.01)**2), 1))
 						if values[i][5] < 18.5:
 							values[i].append("Underweight")
 						elif (values[i][5] >= 18.5) and (values[i][5] <= 24.9):
@@ -113,23 +117,23 @@ def BMICal():
 						print(f"EmpID:{row[0]}, Name:{row[1]}, Surname:{row[2]}, Weight:{row[3]}kg., Height:{row[4]}cm., BMI:{row[5]}, Result:{row[6]}")
 
 				case "2":
-					empid = tuple(input("Enter Employee: "))
-					select_script = "SELECT * FROM EmployeeProfile WHERE EmployeeId = %s"
-					obj_mycursor.execute(select_script, empid)
+					empid = input("Enter Employee: ")
+					select_script = "SELECT EmployeeId, FirstName, LastName, Weight, Height FROM EmployeeProfile WHERE EmployeeId = %s"
+					obj_mycursor.execute(select_script, (empid,))
 					dt_data = obj_mycursor.fetchall()
 					values = []
 					for i in dt_data:
 						for j in i:
 							values.append(j)
-					values.append(round(float(values[3]) / (float(values[4])**2), 1))
+					values.append(round(float(values[3]) / ((float(values[4])*0.01)**2), 1))
 					if values[5] < 18.5:
-							values.append("Underweight")
-						elif (values[5] >= 18.5) and (values[5] <= 24.9):
-							values.append("Normal")
-						elif (values[5] >= 25.0) and (values[5] <= 29.9):
-							values.append("Overweight")
-						else:
-							values.append("Obesity")
+						values.append("Underweight")
+					elif (values[5] >= 18.5) and (values[5] <= 24.9):
+						values.append("Normal")
+					elif (values[5] >= 25.0) and (values[5] <= 29.9):
+						values.append("Overweight")
+					else:
+						values.append("Obesity")
 					print(f"EmpID:{values[0]}, Name:{values[1]}, Surname:{values[2]}, Weight:{values[3]}kg., Height:{values[4]}cm., BMI:{values[5]}, Result:{values[6]}")
 
 
@@ -146,7 +150,7 @@ def ExportCSV():
 	dt_data = obj_mycursor.fetchall()
 	values = [list(i) for i in dt_data]
 	for i in range(len(values)):
-		values[i].append(round(float(values[i][3]) / (float(values[i][4])**2), 1))
+		values[i].append(round(float(values[i][3]) / ((float(values[i][4])*0.01)**2), 1))
 		if values[i][5] < 18.5:
 			values[i].append("Underweight")
 		elif (values[i][5] >= 18.5) and (values[i][5] <= 24.9):
