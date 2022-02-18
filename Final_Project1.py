@@ -150,18 +150,18 @@ def ExportCSV():
 	dt_data = obj_mycursor.fetchall()
 	values = [list(i) for i in dt_data]
 	for i in range(len(values)):
-		values[i].append(round(float(values[i][3]) / ((float(values[i][4])*0.01)**2), 1))
+		values[i].insert(5, round(float(values[i][3]) / ((float(values[i][4])*0.01)**2), 1))
 		if values[i][5] < 18.5:
-			values[i].append("Underweight")
+			values[i].insert(6, "Underweight")
 		elif (values[i][5] >= 18.5) and (values[i][5] <= 24.9):
-			values[i].append("Normal")
+			values[i].insert(6, "Normal")
 		elif (values[i][5] >= 25.0) and (values[i][5] <= 29.9):
-			values[i].append("Overweight")
+			values[i].insert(6, "Overweight")
 		else:
-			values[i].append("Obesity")
+			values[i].insert(6, "Obesity")
 
 	ymd = dt.now().strftime("%y%m%d")
-	with open(f"Employee_Healthy_{ymd}", "w", newline="", encoding="utf-8") as csvfile:
+	with open(f"Employee_Healthy_{ymd}.csv", "w", newline="", encoding="utf-8") as csvfile:
 		writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
 		for i in values:
 			writer.writerow(i)
