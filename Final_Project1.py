@@ -117,7 +117,7 @@ def BMICal():
 						print(f"EmpID:{row[0]}, Name:{row[1]}, Surname:{row[2]}, Weight:{row[3]}kg., Height:{row[4]}cm., BMI:{row[5]}, Result:{row[6]}")
 
 				case "2":
-					empid = input("Enter Employee: ")
+					empid = input("Enter Employee ID: ")
 					select_script = "SELECT EmployeeId, FirstName, LastName, Weight, Height FROM EmployeeProfile WHERE EmployeeId = %s"
 					obj_mycursor.execute(select_script, (empid,))
 					dt_data = obj_mycursor.fetchall()
